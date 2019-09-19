@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 
 /**
  * Set `__statics` path to static files in production;
@@ -28,6 +28,7 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+  console.log('héhé')
 }
 
 app.on('ready', createWindow)
@@ -42,4 +43,13 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+app.on('test', () => {
+})
+
+ipcMain.on('testRequest', (event, message) => {
+  console.log(dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] }))
+  console.log('event : ' + event + ' has been triggered with message : ' + message)
+  event.sender.send('testResponse', 'Bien reçu mgl')
 })
