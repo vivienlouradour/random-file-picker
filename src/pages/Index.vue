@@ -1,58 +1,31 @@
 <template>
   <q-page>
-    <div class="row">
-      <h1> {{ file }} </h1>
-      <h1> {{ settings.data_path }} </h1>
-    </div>
-    <div class="row">
-      <q-card
-        flat
-        bordered
-        class="my-card"
-      >
-        <q-card-section>
-          <div class="text-h6">Choose a directory</div>
-        </q-card-section>
+    <div class="column items-center">
+      <div class="row">
+        <h5> {{ selectedFolderPath[0] }} </h5>
+      </div>
 
-        <q-separator inset />
+      <div class="row">
+        <q-field helper="Path to data store">
+          <q-input
+            clearable
+            v-model="selectedFolderPath"
+            stack-label="Data storage"
+          />
 
-        <q-card-section>
-          <div class="q-gutter-md row items-start">
-            <q-input
-              @input="val => { file = val[0] }"
-              filled
-              type="file"
-            />
-          </div>
-        </q-card-section>
-      </q-card>
-    </div>
-    <div class="row">
-      <q-field helper="Path to data store">
-
-        <q-input
-          clearable
-          v-model="settings.data_path"
-          stack-label="Data storage"
-        />
-
-        <input
-          type="file"
-          id="dataPath"
-          v-on:change="setDataPath"
-          ref="fileInput"
-          hidden
-        />
-
-      </q-field>
-      <q-btn
-        color="primary"
-        v-on:click="selectPath"
-      >Set data path</q-btn>
-    </div>
-
-    <div class="row">
-      <button v-on:click="test">Test</button>
+          <input
+            type="file"
+            id="dataPath"
+            v-on:change="setDataPath"
+            ref="fileInput"
+            hidden
+          />
+        </q-field>
+        <q-btn
+          color="primary"
+          v-on:click="selectPath"
+        >Choose a directory</q-btn>
+      </div>
     </div>
 
   </q-page>
@@ -73,28 +46,22 @@ export default {
   name: 'PageIndex',
   data () {
     return {
-      settings: {
-        data_path: null
-      },
-      file: null
+      selectedFolderPath: null
     }
   },
   methods: {
-    test () {
-      console.log('monTestMarcheBitches')
-      ipcRenderer.send('testRequest', 'This is a test')
-      ipcRenderer.on('testResponse', (message) => {
-        console.log('test response ok with message : ' + message)
-      })
-    },
     selectPath () {
       console.log('Selecting path for data store')
-
-      this.$refs.fileInput.click()
+      console.log('monTestMarcheBitches')
+      ipcRenderer.send('selectFolder')
+      ipcRenderer.on('selectedFolder', (event, selectedFolder) => {
+        console.log('received : ' + selectedFolder)
+        this.setDataPath(selectedFolder)
+      })
     },
 
-    setDataPath (file) {
-      this.settings.data_path = file.target.files[0].path
+    setDataPath (path) {
+      this.selectedFolderPath = path
     },
 
     openFile (path) {

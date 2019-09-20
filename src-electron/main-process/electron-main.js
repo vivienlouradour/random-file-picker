@@ -48,8 +48,7 @@ app.on('activate', () => {
 app.on('test', () => {
 })
 
-ipcMain.on('testRequest', (event, message) => {
-  console.log(dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] }))
-  console.log('event : ' + event + ' has been triggered with message : ' + message)
-  event.sender.send('testResponse', 'Bien reçu mgl')
+ipcMain.on('selectFolder', (event) => {
+  let selectedPath = dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] })
+  event.sender.send('selectedFolder', selectedPath)
 })
