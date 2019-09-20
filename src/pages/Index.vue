@@ -2,7 +2,8 @@
   <q-page>
     <div class="column items-center">
       <div class="row">
-        <h5> {{ selectedFolderPath[0] }} </h5>
+        <h5> {{ selectedFolderPath }} </h5>
+        <h5> {{ lol }} </h5>
       </div>
 
       <div class="row">
@@ -46,21 +47,20 @@ export default {
   name: 'PageIndex',
   data () {
     return {
-      selectedFolderPath: null
+      selectedFolderPath: null,
+      lol: 'lol'
     }
   },
   methods: {
     selectPath () {
-      console.log('Selecting path for data store')
-      console.log('monTestMarcheBitches')
       ipcRenderer.send('selectFolder')
       ipcRenderer.on('selectedFolder', (event, selectedFolder) => {
-        console.log('received : ' + selectedFolder)
-        this.setDataPath(selectedFolder)
+        this.setDataPath(selectedFolder[0])
       })
     },
 
     setDataPath (path) {
+      ipc
       this.selectedFolderPath = path
     },
 
