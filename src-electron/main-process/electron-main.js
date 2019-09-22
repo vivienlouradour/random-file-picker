@@ -20,7 +20,8 @@ function createWindow () {
     useContentSize: true,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    frame: false // <-- add this
   })
 
   mainWindow.loadURL(process.env.APP_URL)
@@ -48,6 +49,6 @@ app.on('test', () => {
 })
 
 ipcMain.on('selectFolder', (event) => {
-  let selectedPath = dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] })
+  let selectedPath = dialog.showOpenDialog({ properties: ['openDirectory', ''] })
   event.sender.send('selectedFolder', selectedPath)
 })

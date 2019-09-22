@@ -1,6 +1,32 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh Lpr lFf">
+
     <q-header elevated>
+      <q-bar class="q-electron-drag">
+        <q-icon name="shuffle" />
+        <div>Random File Picker</div>
+
+        <q-space />
+
+        <q-btn
+          dense
+          flat
+          icon="minimize"
+          @click="minimize"
+        />
+        <q-btn
+          dense
+          flat
+          icon="crop_square"
+          @click="maximize"
+        />
+        <q-btn
+          dense
+          flat
+          icon="close"
+          @click="closeApp"
+        />
+      </q-bar>
       <q-toolbar>
         <q-btn
           flat
@@ -13,14 +39,14 @@
         </q-btn>
 
         <q-toolbar-title>
-          Random File Picker
+          Random File Pickers
         </q-toolbar-title>
 
         <div>v0.1</div>
       </q-toolbar>
     </q-header>
-
     <q-drawer
+      overlay
       v-model="leftDrawerOpen"
       show-if-above
       bordered
@@ -132,7 +158,30 @@ export default {
     }
   },
   methods: {
-    openURL
+    openURL,
+    minimize () {
+      if (process.env.MODE === 'electron') {
+        this.$q.electron.remote.BrowserWindow.getFocusedWindow().minimize()
+      }
+    },
+
+    maximize () {
+      if (process.env.MODE === 'electron') {
+        const win = this.$q.electron.remote.BrowserWindow.getFocusedWindow()
+
+        if (win.isMaximized()) {
+          win.unmaximize()
+        } else {
+          win.maximize()
+        }
+      }
+    },
+
+    closeApp () {
+      if (process.env.MODE === 'electron') {
+        this.$q.electron.remote.BrowserWindow.getFocusedWindow().close()
+      }
+    }
   }
 }
 </script>

@@ -1,16 +1,19 @@
 <template>
   <q-page>
-    <div class="column items-center">
-      <div class="row">
-        <h5> {{ selectedFolderPath }} </h5>
-        <h5> {{ lol }} </h5>
+    <div class="column">
+      <div
+        v-if="selectedFolder.isSelected"
+        class="row justify-center"
+      >
+        <h5> Path : {{ selectedFolder }} </h5>
+        <h5> {{ selectedFolder.name }} </h5>
       </div>
 
-      <div class="row">
+      <div class="row justify-center">
         <q-field helper="Path to data store">
           <q-input
             clearable
-            v-model="selectedFolderPath"
+            v-model="selectedFolder.path"
             stack-label="Data storage"
           />
 
@@ -47,8 +50,11 @@ export default {
   name: 'PageIndex',
   data () {
     return {
-      selectedFolderPath: null,
-      lol: 'lol'
+      selectedFolder: {
+        isSelected: false,
+        name: null,
+        path: null
+      }
     }
   },
   methods: {
@@ -60,8 +66,9 @@ export default {
     },
 
     setDataPath (path) {
-      ipc
-      this.selectedFolderPath = path
+      this.selectedFolder.name = 'TodoName'
+      this.selectedFolder.isSelected = true
+      this.selectedFolder.path = path
     },
 
     openFile (path) {
