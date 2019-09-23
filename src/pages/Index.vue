@@ -36,11 +36,6 @@
 </template>
 
 <style>
-.my-card {
-  width: 100%;
-  max-width: 350px;
-  text-align: center;
-}
 </style>
 
 <script>

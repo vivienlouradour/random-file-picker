@@ -27,29 +27,15 @@
           @click="closeApp"
         />
       </q-bar>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          @click="leftDrawerOpen = !leftDrawerOpen"
-          aria-label="Menu"
-        >
-          <q-icon name="menu" />
-        </q-btn>
 
-        <q-toolbar-title>
-          Random File Pickers
-        </q-toolbar-title>
-
-        <div>v0.1</div>
-      </q-toolbar>
     </q-header>
+
     <q-drawer
       overlay
       v-model="leftDrawerOpen"
       show-if-above
       bordered
+      behavior="mobile"
       content-class="bg-grey-2"
     >
       <q-list>
@@ -142,6 +128,13 @@
     </q-drawer>
 
     <q-page-container>
+      <q-btn
+        @click="leftDrawerOpen = !leftDrawerOpen"
+        aria-label="Menu"
+      >
+        <q-icon name="menu" />
+        Menu
+      </q-btn>
       <router-view />
     </q-page-container>
   </q-layout>
@@ -187,4 +180,7 @@ export default {
 </script>
 
 <style>
+::-webkit-scrollbar {
+  display: none;
+}
 </style>
