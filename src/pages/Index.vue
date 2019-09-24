@@ -44,7 +44,7 @@
         </q-card>
       </div>
       <div>
-        {{ this.files }}
+        {{ this.files }} test
       </div>
     </div>
   </q-page>
