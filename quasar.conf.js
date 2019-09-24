@@ -47,9 +47,12 @@ module.exports = function (ctx) {
         'QInput',
         'QCard',
         'QCardSection',
+        'QCardActions',
         'QField',
         'QBar',
-        'QSpace'
+        'QSpace',
+        'QSeparator',
+        'QChip'
       ],
 
       directives: [

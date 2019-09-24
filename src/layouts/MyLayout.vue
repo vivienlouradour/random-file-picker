@@ -135,7 +135,9 @@
         <q-icon name="menu" />
         Menu
       </q-btn>
-      <router-view />
+      <div class="q-mt-lg">
+        <router-view />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
