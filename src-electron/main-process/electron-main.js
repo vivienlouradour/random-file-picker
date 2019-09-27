@@ -1,6 +1,8 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { readdirSync, statSync } from 'fs'
-import { join } from 'path'
+import { join, extname } from 'path'
+import { Store } from 'electron-store'
+
 /**
  * Set `__statics` path to static files in production;
  * The reason we are setting it here is that the path needs to be evaluated at runtime
@@ -51,38 +53,46 @@ ipcMain.on('selectFolder', (event) => {
   event.sender.send('selectedFolder', selectedPath)
 })
 
-let listFiles = (basePath, rec = true) => {
-  // Get file structure
-  let fileTree = []
+const authorizedExtensions = [
+  'avi',
+  'mov',
+  'mkv',
+  'mpg',
+  'wmv',
+  'wma',
+  'flv',
+  'mp4',
+  'webm'
+]
+
+let listFiles = basePath => {
   let fileList = []
+  let unauthorizedExtensions = []
   readdirSync(basePath).forEach(file => {
     let filePath = join(basePath, file)
     let isFile = statSync(filePath).isFile()
 
-    let fileElement = {
-      name: file,
-      path: filePath,
-      isFile: isFile
-    }
     if (isFile) {
-      fileList = [...fileList, filePath]
+      let extension = extname(filePath).substring(1)
+      if (authorizedExtensions.includes(extension)) {
+        fileList = [...fileList, filePath]
+      } else if (!unauthorizedExtensions.includes(extension)) {
+        console.log(extension)
+        unauthorizedExtensions = [...unauthorizedExtensions, extension]
+      }
     } else {
-      let { fileTreeChilds, fileListChilds } = listFiles(filePath)
-      fileElement = { ...fileElement, files: fileTreeChilds }
-      fileList = [...fileList, fileListChilds]
+      let childs = listFiles(filePath)
+      fileList = fileList.concat(childs.fileList)
+      unauthorizedExtensions = unauthorizedExtensions.concat(childs.unauthorizedExtensions)
     }
-
-    fileTree = [...fileTree, fileElement]
   })
-
-  // return fileTree
-  return { fileList, fileTree }
+  return { fileList, unauthorizedExtensions }
 }
 
 ipcMain.on('listFiles', (event, directoryPath) => {
-  // const getDirectories = basePath =>
-  //   readdirSync(basePath, { withFileTypes: true })
-  //     .filter(dirent => dirent.isFile())
-  //     .map(dirent => path.join(basePath, dirent))
-  event.sender.send('listedFiles', listFiles(directoryPath).fileList)// getDirectories(directoryPath))
+  let { fileList, unauthorizedExtensions } = listFiles(directoryPath)
+  unauthorizedExtensions = [...new Set(unauthorizedExtensions)]
+  console.log(fileList)
+  console.log(unauthorizedExtensions)
+  event.sender.send('listedFiles', fileList, unauthorizedExtensions)
 })

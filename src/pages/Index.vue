@@ -1,13 +1,6 @@
 <template>
   <q-page>
     <div class="column">
-      <!-- <div
-        v-if="selectedFolder.isSelected"
-        class="row justify-center"
-      >
-        <h5> Selected Path : <i> {{ selectedFolder.path }} </i></h5>
-      </div> -->
-
       <div class="row justify-center">
         <q-card class="card-pick-directory">
           <q-card-section>
@@ -25,13 +18,20 @@
                   {{ selectedFolder.path || 'Not selected'  }}
                 </q-chip>
               </div>
-              <div class="col">
-                {{ selectedFolder.path }}
+              <div
+                v-if="this.files"
+                class="col"
+              >
+                <div class="row">
+                  {{ this.files.length }} files
+                </div>
+                <div class="row">
+                  Excluded extensions : {{ this.unauthorizedExt.join(', ') }}
+                </div>
               </div>
             </div>
           </q-card-section>
           <q-card-section class="q-pb-xl">
-            <!-- put 'loading' attribute when scrolling the directory -->
             <q-btn
               :loading="isLoading"
               class="loading float-left"
@@ -43,8 +43,13 @@
           </q-card-section>
         </q-card>
       </div>
-      <div>
-        {{ this.files }} test
+      <div
+        v-if="this.files && this.files.length > 0"
+        class="q-mt-lg row justify-center"
+      >
+        <q-btn v-on:click="pickFile">
+          Pick random file
+        </q-btn>
       </div>
     </div>
   </q-page>
@@ -70,7 +75,8 @@ export default {
         path: null
       },
       files: null,
-      isLoading: false
+      isLoading: false,
+      unauthorizedExt: null
     }
   },
   methods: {
@@ -88,11 +94,16 @@ export default {
 
       this.isLoading = true
       ipcRenderer.send('listFiles', path)
-      ipcRenderer.on('listedFiles', (event, files) => {
+      ipcRenderer.on('listedFiles', (event, files, unauthorizedExt) => {
         this.files = files
-        console.log(JSON.stringify(files))
+        this.unauthorizedExt = unauthorizedExt
         this.isLoading = false
       })
+    },
+
+    pickFile () {
+      let filePath = this.files[Math.floor(Math.random() * this.files.length)]
+      this.openFile(filePath)
     },
 
     openFile (path) {
