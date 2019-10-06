@@ -1,5 +1,11 @@
-import { basename } from 'path'
+import { basename, dirname } from 'path'
 
-export function getName (path) {
+function getName (path) {
   return basename(path)
 }
+
+function getParentDirectory (filePath) {
+  return dirname(filePath)
+}
+
+export { getName, getParentDirectory }
