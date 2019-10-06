@@ -46,7 +46,7 @@
         v-if="this.files && this.files.length > 0"
         class="q-mt-lg row justify-center"
       >
-        <q-btn v-on:click="pickFile">
+        <q-btn @click="pickFile">
           Pick random file
         </q-btn>
       </div>
@@ -56,6 +56,8 @@
       >
         <p>{{ this.selectedFile }} </p>
       </div>
+      <p>TEST: {{ test }} </p>
+      <q-btn @click="testa">Testa</q-btn>
     </div>
   </q-page>
 </template>
@@ -85,7 +87,21 @@ export default {
       unauthorizedExt: null
     }
   },
+  computed: {
+    test: {
+      get () {
+        return this.$store.state.fileStructure.selectedDirectory.isSelected
+      },
+      set (val) {
+        console.log('hello')
+        this.$store.dispatch('fileStructure/selectDirectory', 'direcotry/path/test')
+      }
+    }
+  },
   methods: {
+    testa () {
+      this.test = 'changed'
+    },
     selectPath () {
       ipcRenderer.send('selectFolder')
       ipcRenderer.on('selectedFolder', (event, selectedFolder) => {
