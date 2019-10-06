@@ -30,8 +30,8 @@ export default function (/* { ssrContext } */) {
 
   if (process.env.DEV && module.hot) {
     module.hot.accept(['./fileStructure'], () => {
-      const newShowcase = require('./fileStructure').default
-      Store.hotUpdate({ modules: { showcase: newShowcase } })
+      const newFileStructure = require('./fileStructure').default
+      Store.hotUpdate({ modules: { fileStructure: newFileStructure } })
     })
   }
 

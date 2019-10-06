@@ -77,7 +77,6 @@ let listFiles = basePath => {
       if (authorizedExtensions.includes(extension)) {
         fileList = [...fileList, filePath]
       } else if (!unauthorizedExtensions.includes(extension)) {
-        console.log(extension)
         unauthorizedExtensions = [...unauthorizedExtensions, extension]
       }
     } else {
@@ -92,7 +91,5 @@ let listFiles = basePath => {
 ipcMain.on('listFiles', (event, directoryPath) => {
   let { fileList, unauthorizedExtensions } = listFiles(directoryPath)
   unauthorizedExtensions = [...new Set(unauthorizedExtensions)]
-  console.log(fileList)
-  console.log(unauthorizedExtensions)
   event.sender.send('listedFiles', fileList, unauthorizedExtensions)
 })

@@ -3,12 +3,14 @@ export default {
     isSelected: false,
     path: null,
     name: null,
-    files: []
+    files: [],
+    unauthorizedExtensions: []
   },
   selectedFile: {
     isSelected: false,
     path: null,
     name: null
   },
+  nbPicked: 0,
   isLoading: false
 }
