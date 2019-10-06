@@ -36,7 +36,6 @@
               :loading="isLoading"
               class="loading float-left"
               style="width: 200px;"
-              push
               color="primary"
               v-on:click="selectPath"
             >Choose a directory</q-btn>
@@ -50,6 +49,12 @@
         <q-btn v-on:click="pickFile">
           Pick random file
         </q-btn>
+      </div>
+      <div
+        v-if="this.selectedFile"
+        class="q-mt-lg row justify-center"
+      >
+        <p>{{ this.selectedFile }} </p>
       </div>
     </div>
   </q-page>
@@ -74,6 +79,7 @@ export default {
         name: null,
         path: null
       },
+      selectedFile: null,
       files: null,
       isLoading: false,
       unauthorizedExt: null
@@ -103,6 +109,7 @@ export default {
 
     pickFile () {
       let filePath = this.files[Math.floor(Math.random() * this.files.length)]
+      this.selectedFile = filePath
       this.openFile(filePath)
     },
 

@@ -52,7 +52,10 @@ module.exports = function (ctx) {
         'QBar',
         'QSpace',
         'QSeparator',
-        'QChip'
+        'QChip',
+        'QTabs',
+        'QTab',
+        'QRouteTab'
       ],
 
       directives: [
