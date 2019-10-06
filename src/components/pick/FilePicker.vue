@@ -1,5 +1,40 @@
 <template>
   <q-card class="card-pick-directory">
+    <!-- dialog confirm delete -->
+    <q-dialog
+      v-model="showConfirmDeleteDialog"
+      persistent
+    >
+      <q-card>
+        <q-card-section class="row items-center">
+          <b class="q-ml-sm">Are you shure you want to delete this file ?</b>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="Cancel"
+            color="primary"
+            v-close-popup
+          />
+          <q-btn
+            flat
+            label="Open containing folder"
+            color="primary"
+            @click="openContainingFolder"
+          />
+          <q-btn
+            flat
+            label="Yes"
+            color="negative"
+            v-close-popup
+            @click="deleteFile"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <!-- end dialog confirm delete -->
+
     <q-card-section>
       <div class="text-h6">Pick a random file</div>
     </q-card-section>
@@ -36,31 +71,44 @@
         Pick random file
       </q-btn>
       <q-btn
-        title="delete file"
         class="float-right"
         round
         color="negative"
         icon="delete"
-      ></q-btn>
+        :disable="!selectedFile.isSelected"
+        @click="showConfirmDeleteDialog = true"
+      >
+        <q-tooltip>
+          Delete file
+        </q-tooltip>
+      </q-btn>
       <q-btn
-        title="Open containing folder"
         class="float-right q-mr-sm"
         round
         color="positive"
         icon="folder_open"
+        :disable="!selectedFile.isSelected"
         @click="openContainingFolder"
-      ></q-btn>
+      >
+        <q-tooltip>
+          Open containing folder
+        </q-tooltip>
+      </q-btn>
     </q-card-section>
   </q-card>
-
 </template>
 
 <script>
 import { shell } from 'electron'
-import { getParentDirectory } from '../../helpers/fileHelper'
 
 export default {
   name: 'FilePicker',
+  data () {
+    return {
+      showConfirmDeleteDialog: false,
+      seamless: true
+    }
+  },
   computed: {
     selectedFile () {
       return this.$store.state.fileStructure.selectedFile
@@ -77,7 +125,11 @@ export default {
     },
 
     openContainingFolder () {
-      this.openFile(getParentDirectory(this.selectedFile.path))
+      shell.showItemInFolder(this.selectedFile.path)
+    },
+
+    deleteFile () {
+      this.$store.dispatch('fileStructure/deleteSelectedFile')
     }
   }
 }

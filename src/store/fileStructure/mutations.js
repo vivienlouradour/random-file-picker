@@ -28,3 +28,9 @@ export const setSelectedFile = (state, { filePath, fileName }) => {
   state.selectedDirectory.files.splice(index, 1)
   state.nbPicked++
 }
+
+export const deleteSelectedFile = (state) => {
+  state.selectedFile.path = null
+  state.selectedFile.name = null
+  state.selectedFile.isSelected = false
+}

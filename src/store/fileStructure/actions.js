@@ -1,6 +1,8 @@
 // Asynchronous
 import { ipcRenderer } from 'electron'
 import { getName } from '../../helpers/fileHelper'
+import { unlink } from 'fs'
+import { Notify } from 'quasar'
 
 export async function selectDirectory (context, directoryPath) {
   let directoryName = getName(directoryPath)
@@ -19,4 +21,22 @@ export async function pickRandomFile (context) {
   let pickedFile = files[Math.floor(Math.random() * files.length)]
   let fileName = getName(pickedFile)
   context.commit('setSelectedFile', { filePath: pickedFile, fileName })
+}
+
+export async function deleteSelectedFile (context) {
+  unlink(context.state.selectedFile.path, (error) => {
+    if (error) {
+      console.error(error)
+      Notify.create({
+        message: 'An error has occured',
+        color: 'red'
+      })
+    } else {
+      context.commit('deleteSelectedFile')
+      Notify.create({
+        message: 'File deleted',
+        color: 'green'
+      })
+    }
+  })
 }
