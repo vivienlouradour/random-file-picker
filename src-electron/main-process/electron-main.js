@@ -1,7 +1,8 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { readdirSync, statSync } from 'fs'
 import { join, extname } from 'path'
-import { Store } from 'electron-store'
+const Store = require('electron-store')
+import defaultSettings from '../../src/helpers/defaultAuthorizedExtensions'
 
 /**
  * Set `__statics` path to static files in production;
@@ -12,6 +13,8 @@ if (process.env.PROD) {
 }
 
 let mainWindow
+
+const store = new Store()
 
 function createWindow () {
   /**
@@ -34,7 +37,18 @@ function createWindow () {
   })
 }
 
-app.on('ready', createWindow)
+function loadSettings () {
+  let authorizedExtensions = store.get('authorizedExtensions')
+  if (!authorizedExtensions) {
+    store.set('authorizedExtensions', defaultSettings)
+  }
+  console.log('ElectronStore : ')
+  console.log(store.get())
+}
+app.on('ready', () => {
+  loadSettings()
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -53,17 +67,12 @@ ipcMain.on('selectFolder', (event) => {
   event.sender.send('selectedFolder', selectedPath)
 })
 
-const authorizedExtensions = [
-  'avi',
-  'mov',
-  'mkv',
-  'mpg',
-  'wmv',
-  'wma',
-  'flv',
-  'mp4',
-  'webm'
-]
+let isExtensionAuthorized = extension => {
+  let authorizedExtensions = store.get('authorizedExtensions')
+  return !authorizedExtensions ||
+    authorizedExtensions.length === 0 ||
+    authorizedExtensions.includes(extension)
+}
 
 let listFiles = basePath => {
   let fileList = []
@@ -74,7 +83,7 @@ let listFiles = basePath => {
 
     if (isFile) {
       let extension = extname(filePath).substring(1)
-      if (authorizedExtensions.includes(extension)) {
+      if (isExtensionAuthorized(extension)) {
         fileList = [...fileList, filePath]
       } else if (!unauthorizedExtensions.includes(extension)) {
         unauthorizedExtensions = [...unauthorizedExtensions, extension]
