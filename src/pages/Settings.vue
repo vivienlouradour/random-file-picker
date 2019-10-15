@@ -4,7 +4,7 @@
       <div class="row justify-center">
         <q-card class="card-pick-directory">
           <q-card-section>
-            <div class="text-h6">Settings (TOTO)</div>
+            <div class="text-h6">(TOTO)</div>
           </q-card-section>
         </q-card>
       </div>
