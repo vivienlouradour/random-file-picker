@@ -49,13 +49,11 @@ jobs:
     #     ELECTRON: true
     #     APP_VERSION_NUMBER: 0.5.9
     #   run: set
-    - name: Build on Linux
+    - name: Build on all platform
       # env:
       #   ELECTRON: true
       #   APP_VERSION_NUMBER: 0.5.9
-      run: quasar build -m electron --target linux --bundler builder
-    - name: Build on Windows
-      run: quasar build -m electron --target win --bundler builder
+      run: quasar build -m electron --target all --bundler builder
     - name: Zip Windows release
       run: zip -r ./RandomFilePicker.zip ./dist/electron/Packaged/win-unpacked
     - name: see directory
@@ -81,7 +79,7 @@ jobs:
         asset_name: Linux 
         asset_content_type: application/x-executable
     - name: Upload Release Windows Asset
-      id: upload-release-windows-asset 
+      id: upload-release-windows-asset
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
