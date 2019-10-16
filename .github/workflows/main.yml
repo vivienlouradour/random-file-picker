@@ -55,7 +55,7 @@ jobs:
       #   APP_VERSION_NUMBER: 0.5.9
       run: quasar build -m electron --target all --bundler builder
     - name: Zip Windows release
-      run: zip -r ./RandomFilePicker.zip ./dist/electron/Packaged/win-unpacked
+      run: cd ./dist/electron/Packaged/win-unpacked && zip -r ../../../../RandomFilePicker.zip ./*
     - name: see directory
       run: ls ./dist/electron/Packaged
     - name: Create Release
@@ -76,7 +76,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
         asset_path: ./dist/electron/Packaged/RandomFilePicker-0.0.1.AppImage
-        asset_name: Linux 
+        asset_name: RandomFilePicker-linux.AppImage
         asset_content_type: application/x-executable
     - name: Upload Release Windows Asset
       id: upload-release-windows-asset
@@ -85,134 +85,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: ./RandomFilePicker.zip
-        asset_name: Windows  
-        asset_content_type: application/x-executable
-  
-  # build_on_windows:
-  #   runs-on: windows-2016
-  #   steps:
-  #   - uses: actions/checkout@master
-  #     with:
-  #       ref: test-actions
-  #   - uses: actions/setup-node@master
-  #     with:
-  #       node-version: 10.16
-  #   - name: Install quasar CLI
-  #     run: npm install -g @quasar/cli
-  #   - name: Install dependencies
-  #     run: npm install
-  #   - name: Build on Windows
-  #     # env:
-  #     #   ELECTRON: true
-  #     #   APP_VERSION_NUMBER: 0.5.9
-  #     run: quasar build -m electron --target win --bundler builder
-  #   - name: see directory
-  #     run: ls ./dist/electron/Packaged
-  #   - name: Create Release
-  #     id: create_release
-  #     uses: actions/create-release@v1.0.0
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     with:
-  #       tag_name: ${{ github.ref }}
-  #       release_name: Release ${{ github.ref }}
-  #       draft: false
-  #       prerelease: false
-  #   - name: Upload Release Asset
-  #     id: upload-release-asset 
-  #     uses: actions/upload-release-asset@v1.0.1
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     with:
-  #       upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-  #       asset_path: ./dist/electron/Packaged/RandomFilePicker-0.0.1.AppImage
-  #       asset_name: RandomFilePicker.AppImage
-  #       asset_content_type: application/x-executable
-  # build_on_win:
-  #   runs-on: windows-2016
-  #   steps:
-  #   - uses: actions/checkout@master
-  #     with:
-  #       ref: master 
-  #   - uses: actions/setup-node@master
-  #     with:
-  #       node-version: 10.16
-  #   - name: install node tools
-  #     run: npm install --global --production windows-build-tools@4.0.0
-  #   - name: install node-gyp
-  #     run: npm install --global node-gyp@latest
-  #   - name: Set node config to use python2.7
-  #     run: npm config set python python2.7
-  #   - name: Set node config to set msvs_version to 2015
-  #     run: npm config set msvs_version 2015
-  #   - name: Work around for Windows Server 2019
-  #     run: set path=%path%;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin
-  #   - name: Install dependencies
-  #     run: yarn install
-  #   - name: check env
-  #     env:
-  #       ELECTRON: true
-  #       APP_VERSION_NUMBER: 0.5.9
-  #     run: set
-  #   - name: Build on Windows
-  #     env:
-  #       ELECTRON: true
-  #       APP_VERSION_NUMBER: 0.5.9
-  #     run: yarn build
-  #   - name: Build Electron
-  #     env:
-  #       ELECTRON: true
-  #       APP_VERSION_NUMBER: 0.5.9
-  #     run: yarn electron:buildWin
-  #   - name: see directory
-  #     run: ls ./electron_dist/squirrel-windows
-  #   - uses: lucyio/upload-to-release@master
-  #     with:
-  #       name: lucyio/electron
-  #       path: ./electron_dist/squirrel-windows
-  #       action: unpublished
-  #       release_id: 0.5.9
-  #       release-repo: lucyio/electron
-  
-  # build_on_mac:
-  #   runs-on: macOS-latest
-  #   steps:
-  #   - uses: actions/checkout@master
-  #     with:
-  #       ref: master
-  #   - uses: actions/setup-node@master
-  #     with:
-  #       node-version: 10.16
-  #   - name: see directory in electron_dist
-  #     run: ls ./electron
-  #   - name: add key to single keychain
-  #     run: security import ./electron/june-ai-single2-certs-electron.p12 -P ${{ secrets.CSC_KEY_PASSWORD }}
-  #   - name: electron mac os security identities
-  #     run: security find-identity -v
-  #   - name: Install dependencies
-  #     run: yarn install
-  #   - name: Build on MacOS
-  #     env:
-  #       ELECTRON: true
-  #       APP_VERSION_NUMBER: 0.5.9
-  #     run: yarn build
-  #   - name: Build Electron
-  #     env:
-  #       ELECTRON: true
-  #       CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-  #       APP_VERSION_NUMBER: 0.5.9
-  #     run: yarn electron:buildUnix
-  #   - name: see directory
-  #     run: ls
-  #   - name: check env
-  #     run: echo $ELECTRON $FEATHERS_URL
-  #   - name: see directory in electron_dist
-  #     run: ls ./electron_dist
-  #   - uses: lucyio/upload-to-release@master
-  #     with:
-  #       name: lucyio/electron
-  #       path: ./electron_dist
-  #       action: unpublished
-  #       release_id: 0.x.x
-  #       release-repo: lucyio/electron
+        asset_path: ./RandomFilePicker-windows.zip
+        asset_name: RandomFilePicker.zip  
+        asset_content_type: application/zip
