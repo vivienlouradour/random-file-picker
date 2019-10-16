@@ -1,6 +1,6 @@
 {
   "name": "random-file-picker",
-  "version": "0.0.3",
+  "version": "0.0.1",
   "description": "Electron app for picking random files",
   "productName": "RandomFilePicker",
   "cordovaId": "org.cordova.quasar.app",
