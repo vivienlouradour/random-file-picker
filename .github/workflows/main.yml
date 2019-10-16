@@ -71,7 +71,7 @@ jobs:
         draft: false
         prerelease: false
     - name: Upload Release Linux Asset
-      id: upload-release-asset 
+      id: upload-release-linux-asset
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -81,7 +81,7 @@ jobs:
         asset_name: Linux 
         asset_content_type: application/x-executable
     - name: Upload Release Windows Asset
-      id: upload-release-asset 
+      id: upload-release-windows-asset 
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
