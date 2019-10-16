@@ -27,6 +27,15 @@ quasar build
 quasar build -m electron --target all --bundler builder
 ```
 
-### Customize the configuration
+## Trigger new Release (with Github actions)
 
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+With github actions (`.github/workflows/main.yml`), when a new tag is created with format _`v*`_ :
+
+- App is built on all platforms
+- New release with tagname is created
+- Windows & Linux apps are uploaded on this release
+
+```bash
+git tag -a v*.*.*
+git push origin v*.*.*
+```
